@@ -52,12 +52,15 @@ class HomeScreenViewModel extends FutureViewModel<UserModel> {
     });
   }
 
+  //get user data from local pref
   Future<UserModel> getUserData() async {
     var model = await _localPrefs.getUserData();
     if (model != null) {
       _userModel = model;
       notifyListeners();
       return _userModel;
+    } else {
+      _navigatorService.goBack();
     }
     return null;
   }

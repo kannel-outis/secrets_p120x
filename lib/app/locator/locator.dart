@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:secrets_p20x/models/error_model.dart';
 import 'package:secrets_p20x/services/service_helpers/auth_service_helper.dart';
 import '../../services/service_helpers/secret_service_helper.dart';
 import '../../models/secrets_model.dart';
@@ -19,4 +20,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => SecretService());
   locator.registerLazySingleton(() => SecretServiceHelper());
   locator.registerLazySingleton(() => AuthServiceHelper());
+  locator.registerLazySingleton(() => ErrorModel());
 }

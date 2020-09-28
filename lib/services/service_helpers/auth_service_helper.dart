@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import '../.././models/error_model.dart';
+
 import '../.././app/locator/locator.dart';
 import '../.././errors/error.dart';
 import '../../models/user_model.dart';
@@ -21,40 +23,38 @@ abstract class BaseAuthServiceHelper {
 class AuthServiceHelper extends BaseAuthServiceHelper {
   var _model = locator<UserModel>();
   var _localPrefs = locator<LocalPrefs>();
+  var _errorModel = locator<ErrorModel>();
   @override
   Future<UserModel> signinUser(
       {String email, Map<String, dynamic> body, String url}) async {
-    final bool validateEmail = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
     try {
-      // validate email
-      if (validateEmail != false) {
-        var encodedBody = json.encode(body);
-        http.Response response = await http.post(url,
-            body: encodedBody, headers: {"Content-type": "application/json"});
-        if (response.statusCode == 200) {
-          var fromMap = json.decode(response.body);
-          _model = UserModel.fromMap(fromMap);
-          _localPrefs.saveUserData(model: _model);
-          return _model;
-          // checks for specific response msg
-        } else if (json.decode(response.body) == "Invalid credentials") {
-          throw HttpException("Wrong email and password");
-        } else if (json.decode(response.body)['msg'] == "User not found") {
-          throw HttpException("User not found");
-        }
+      var encodedBody = json.encode(body);
+      http.Response response = await http.post(url,
+          body: encodedBody, headers: {"Content-type": "application/json"});
+      if (response.statusCode == 200) {
+        var fromMap = json.decode(response.body);
+        _model = UserModel.fromMap(fromMap);
+        _localPrefs.saveUserData(model: _model);
+        return _model;
+        // checks for specific response msg
+      } else if (json.decode(response.body) ==
+          "email or password is incorrect") {
+        throw HttpException("email or password is incorrect");
+      } else if (json.decode(response.body)['msg'] == "User not found") {
+        throw HttpException("User not found");
       } else {
-        throw FormatException("Invalide Email");
+        var fromErrorMap = json.decode(response.body);
+        _errorModel = ErrorModel.fromMap(fromErrorMap);
+        throw FormatException(_errorModel.msg);
       }
     } on HttpException catch (e) {
-      throw Exceptions(e.toString().substring(15));
+      throw Exceptions(message: e.toString().substring(15));
     } on SocketException {
-      throw Exceptions("No internet. Please check Connection and try again");
+      throw Exceptions(
+          message: "No internet. Please check Connection and try again");
     } on FormatException catch (e) {
-      throw Exceptions(e.toString().substring(16));
+      throw Exceptions(message: e.toString().substring(16));
     }
-    return null;
   }
 
   @override
@@ -64,42 +64,31 @@ class AuthServiceHelper extends BaseAuthServiceHelper {
       String password,
       String url,
       Map<String, dynamic> body}) async {
-    final bool validateEmail = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
-
     try {
-      //vaalidates email
-      if (validateEmail != false) {
-        // validates email and password length
-        if (username.length >= 6 && password.length >= 6) {
-          var encodedBody = json.encode(body);
-          http.Response response = await http.post(url,
-              body: encodedBody, headers: {"Content-type": "application/json"});
-          // run if success
-          if (response.statusCode == 200) {
-            var fromMap = json.decode(response.body);
-            _model = UserModel.fromMap(fromMap);
-            _localPrefs.saveUserData(model: _model);
-            return _model;
-            //checks for specific response msg
-          } else if (json.decode(response.body)['msg'] ==
-              "User Already Exists") {
-            throw HttpException("User Already Exists");
-          }
-        } else {
-          throw FormatException("credentials must have at least 6 characters");
-        }
+      var encodedBody = json.encode(body);
+      http.Response response = await http.post(url,
+          body: encodedBody, headers: {"Content-type": "application/json"});
+      // run if success
+      if (response.statusCode == 200) {
+        var fromMap = json.decode(response.body);
+        _model = UserModel.fromMap(fromMap);
+        _localPrefs.saveUserData(model: _model);
+        return _model;
+        //checks for specific response msg
+      } else if (json.decode(response.body)['msg'] == "User Already Exists") {
+        throw HttpException("User Already Exists");
       } else {
-        throw FormatException("Invalid Email ");
+        var fromErrorMap = json.decode(response.body);
+        _errorModel = ErrorModel.fromMap(fromErrorMap);
+        throw FormatException(_errorModel.msg);
       }
     } on HttpException catch (e) {
-      throw Exceptions(e.toString().substring(15));
+      throw Exceptions(message: e.toString().substring(15));
     } on SocketException {
-      throw Exceptions("No internet. Please check Connection and try again");
+      throw Exceptions(
+          message: "No internet. Please check Connection and try again");
     } on FormatException catch (e) {
-      throw Exceptions(e.toString().substring(16));
+      throw Exceptions(message: e.toString().substring(16));
     }
-    return null;
   }
 }

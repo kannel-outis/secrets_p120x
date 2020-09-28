@@ -38,11 +38,11 @@ class SecretServiceHelper extends BaseSecretServiceHelper {
         throw FormatException("fields can't be empty");
       }
     } on SocketException {
-      throw Exceptions("No internet. check connection and try again");
+      throw Exceptions(message: "No internet. check connection and try again");
     } on HttpException catch (e) {
-      throw Exceptions(e.toString().substring(15));
+      throw Exceptions(message: e.toString().substring(15));
     } on FormatException catch (e) {
-      throw Exceptions(e.toString().substring(16));
+      throw Exceptions(message: e.toString().substring(16));
     }
   }
 
@@ -63,7 +63,7 @@ class SecretServiceHelper extends BaseSecretServiceHelper {
       }
       return null;
     } on SocketException {
-      throw Exceptions("no internet, check conetction and try again");
+      throw Exceptions(message: "no internet, check conetction and try again");
     }
   }
 }
