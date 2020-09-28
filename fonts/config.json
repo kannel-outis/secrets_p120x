@@ -1,0 +1,22 @@
+{
+  "name": "",
+  "css_prefix_text": "",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
+  "glyphs": [
+    {
+      "uid": "8d2b91edcad12992a96fc5eac674700d",
+      "css": "play-outline",
+      "code": 59571,
+      "src": "typicons"
+    },
+    {
+      "uid": "71f905d8fda639701b4127de4b0bab67",
+      "css": "key",
+      "code": 61572,
+      "src": "fontawesome5"
+    }
+  ]
+}

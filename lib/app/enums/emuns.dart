@@ -1,0 +1,1 @@
+enum DataLoadInfoState { Loading, Loaded }
