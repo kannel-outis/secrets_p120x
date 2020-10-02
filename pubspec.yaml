@@ -33,6 +33,7 @@ dependencies:
   http: ^0.12.1
   auto_route: ^0.6.7
   stacked_services: ^0.5.4+3
+  equatable: ^1.2.5
 
 dev_dependencies:
   build_runner: null

@@ -24,19 +24,19 @@ class AuthServices {
 
   Future<UserModel> registerUser(
       String username, String email, String password) async {
-    // if (email != null && password != null && username != null) {
-    return _authHelper.register(
-        email: email,
-        password: password,
-        username: username,
-        url: _baseUrl + "/user/register",
-        body: {
-          "name": username,
-          "email": email,
-          "password": password,
-        });
-    // } else {
-    //   throw Exceptions("Fields can be empty");
-    // }
+    if (email != null && password != null && username != null) {
+      return _authHelper.register(
+          email: email,
+          password: password,
+          username: username,
+          url: _baseUrl + "/user/register",
+          body: {
+            "name": username,
+            "email": email,
+            "password": password,
+          });
+    } else {
+      throw Exceptions(message: "Fields can be empty");
+    }
   }
 }

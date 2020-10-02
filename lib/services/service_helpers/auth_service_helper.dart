@@ -39,21 +39,17 @@ class AuthServiceHelper extends BaseAuthServiceHelper {
         // checks for specific response msg
       } else if (json.decode(response.body) ==
           "email or password is incorrect") {
-        throw HttpException("email or password is incorrect");
+        throw Exceptions(message: "email or password is incorrect");
       } else if (json.decode(response.body)['msg'] == "User not found") {
-        throw HttpException("User not found");
+        throw Exceptions(message: "User not found");
       } else {
         var fromErrorMap = json.decode(response.body);
         _errorModel = ErrorModel.fromMap(fromErrorMap);
-        throw FormatException(_errorModel.msg);
+        throw Exceptions(message: _errorModel.msg);
       }
-    } on HttpException catch (e) {
-      throw Exceptions(message: e.toString().substring(15));
     } on SocketException {
       throw Exceptions(
           message: "No internet. Please check Connection and try again");
-    } on FormatException catch (e) {
-      throw Exceptions(message: e.toString().substring(16));
     }
   }
 
@@ -76,19 +72,15 @@ class AuthServiceHelper extends BaseAuthServiceHelper {
         return _model;
         //checks for specific response msg
       } else if (json.decode(response.body)['msg'] == "User Already Exists") {
-        throw HttpException("User Already Exists");
+        throw Exceptions(message: "User Already Exists");
       } else {
         var fromErrorMap = json.decode(response.body);
         _errorModel = ErrorModel.fromMap(fromErrorMap);
-        throw FormatException(_errorModel.msg);
+        throw Exceptions(message: _errorModel.msg);
       }
-    } on HttpException catch (e) {
-      throw Exceptions(message: e.toString().substring(15));
     } on SocketException {
       throw Exceptions(
           message: "No internet. Please check Connection and try again");
-    } on FormatException catch (e) {
-      throw Exceptions(message: e.toString().substring(16));
     }
   }
 }

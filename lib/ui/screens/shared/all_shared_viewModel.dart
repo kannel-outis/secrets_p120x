@@ -50,11 +50,12 @@ class SharedViewModel extends FutureViewModel<List<SecretsModel>> {
       var newlist = await _secretService.getAllSecrets();
       _setListOfSecrets(newlist);
       mySharedSecrets();
+      return _allSharedSecrets;
     } on Exceptions catch (e) {
       _setException(e);
     }
     _setState(DataLoadInfoState.Loaded);
-    return _allSharedSecrets;
+    return null;
   }
 
   //Load and Extract my Secrets from all loaded secrets

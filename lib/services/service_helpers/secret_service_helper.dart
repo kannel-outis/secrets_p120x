@@ -27,22 +27,18 @@ class SecretServiceHelper extends BaseSecretServiceHelper {
           "Content-type": "application/json",
           "auth-token": token,
         });
-        if (response != null) {
+        if (response.statusCode == 200) {
+          print(response.body);
           return;
-        } else if (json.decode(response.body)['msg'] == "Invalid Token" ||
-            json.decode(response.body)['msg'] == "Access Denied!") {
-          throw HttpException(
-              "Invalid token/ expired token, Please login again");
+        } else {
+          print(json.decode(response.body)['msg']);
+          throw Exceptions(message: json.decode(response.body)['msg']);
         }
       } else {
-        throw FormatException("fields can't be empty");
+        throw Exceptions(message: "fields can't be empty");
       }
     } on SocketException {
       throw Exceptions(message: "No internet. check connection and try again");
-    } on HttpException catch (e) {
-      throw Exceptions(message: e.toString().substring(15));
-    } on FormatException catch (e) {
-      throw Exceptions(message: e.toString().substring(16));
     }
   }
 

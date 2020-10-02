@@ -7,35 +7,34 @@ import '../../../services/service_handlers/secret_services/secrets_services.dart
 import '../../../models/user_model.dart';
 import 'package:stacked/stacked.dart';
 
-class HomeScreenViewModel extends FutureViewModel<UserModel> {
+class HomeScreenViewModel extends BaseViewModel {
   String _secret;
   var _localPrefs = locator<LocalPrefs>();
   var _navigatorService = locator<NavigationService>();
-  UserModel _userModel;
   bool _isLoading = false;
-  Exceptions _error;
+  Exceptions _exceptions;
 
   set setSecret(String value) {
     _secret = value;
   }
 
-  Future<Exceptions> shareSecret() async {
+  Future<Exceptions> shareSecret({String token}) async {
+    _exceptions = null;
     _isLoading = true;
     notifyListeners();
 
     try {
-      await SecretService()
-          .shareSecret(_secret, _userModel.token)
-          .then((value) {
+      await SecretService().shareSecret(_secret, token).then((value) {
         _isLoading = false;
         notifyListeners();
+        return null;
       });
-      return null;
     } on Exceptions catch (e) {
       _isLoading = false;
       notifyListeners();
-      return _error = e;
+      _exceptions = e;
     }
+    return _exceptions;
   }
 
   void navigateTo() {
@@ -54,22 +53,11 @@ class HomeScreenViewModel extends FutureViewModel<UserModel> {
 
   //get user data from local pref
   Future<UserModel> getUserData() async {
-    var model = await _localPrefs.getUserData();
-    if (model != null) {
-      _userModel = model;
-      notifyListeners();
-      return _userModel;
-    } else {
-      _navigatorService.goBack();
-    }
-    return null;
+    print("Start");
+    return await _localPrefs.getUserData();
   }
 
-  UserModel get userModel => _userModel;
   String get secret => _secret;
   bool get isLoading => _isLoading;
-  Exceptions get containsError => _error;
-
-  @override
-  Future<UserModel> futureToRun() => getUserData();
+  Exceptions get exceptions => _exceptions;
 }

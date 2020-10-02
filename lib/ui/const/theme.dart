@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 final ThemeData themeData = ThemeData(
   accentColor: Color(0xFF212529),
+  primaryColor: Color(0xFF212529),
   scaffoldBackgroundColor: Color(0xFFe8ecef),
   inputDecorationTheme: InputDecorationTheme(
     labelStyle: TextStyle(color: Color(0xFF212529), fontSize: 18),

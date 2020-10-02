@@ -47,7 +47,9 @@ class _MySharedScreenState extends State<MySharedScreen> {
         },
       );
     } else {
-      return Container();
+      return Center(
+        child: Text("You have not shared any secret"),
+      );
     }
   }
 
