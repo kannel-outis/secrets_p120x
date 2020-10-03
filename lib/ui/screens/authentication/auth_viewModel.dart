@@ -36,7 +36,7 @@ class AuthViewModel extends BaseViewModel {
     try {
       await _authServices.signinUser(_email, _password).then((model) {
         if (model != null) {
-          // _navigationService.navigateTo(Routes.homeScreen);
+          _navigationService.navigateTo(Routes.homeScreen);
           _isLoading = false;
           notifyListeners();
         }
@@ -59,7 +59,7 @@ class AuthViewModel extends BaseViewModel {
           .registerUser(_username, _email, _password)
           .then((model) {
         if (model != null) {
-          // _navigationService.navigateTo(Routes.homeScreen);
+          _navigationService.navigateTo(Routes.homeScreen);
           _isLoading = false;
           notifyListeners();
         } else {

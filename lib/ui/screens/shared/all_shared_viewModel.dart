@@ -50,12 +50,11 @@ class SharedViewModel extends FutureViewModel<List<SecretsModel>> {
       var newlist = await _secretService.getAllSecrets();
       _setListOfSecrets(newlist);
       mySharedSecrets();
-      return _allSharedSecrets;
     } on Exceptions catch (e) {
       _setException(e);
     }
     _setState(DataLoadInfoState.Loaded);
-    return null;
+    return _allSharedSecrets;
   }
 
   //Load and Extract my Secrets from all loaded secrets
@@ -82,10 +81,11 @@ class SharedViewModel extends FutureViewModel<List<SecretsModel>> {
     _navigatorService.navigateTo(Routes.mySharedScreen);
   }
 
-  @override
-  Future<List<SecretsModel>> futureToRun() => sharedSecrets();
   Exceptions get exceptions => _exceptions;
   DataLoadInfoState get dataLoadInfo => _dataLoadInfo;
   List<SecretsModel> get secrets => _allSharedSecrets;
   List<SecretsModel> get mySharedSecretsList => _mySharedSecretsList;
+
+  @override
+  Future<List<SecretsModel>> futureToRun() => sharedSecrets();
 }

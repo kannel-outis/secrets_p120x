@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../.././models/user_model.dart';
 import '../../../ui/fonts/my_flutter_app_icons.dart';
 import '../../../ui/widgets/submit_button.dart';
 import '../../../ui/widgets/text_form_field.dart';
@@ -16,19 +15,11 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController controller;
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   DateTime _lastQuitTime;
-  UserModel _userModel;
 
   @override
   void initState() {
     super.initState();
-    getData();
     controller = TextEditingController();
-  }
-
-  void getData() async {
-    print("Start Here");
-    _userModel = await HomeScreenViewModel().getUserData();
-    setState(() {});
   }
 
   @override
@@ -42,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
           appBar: AppBar(
             automaticallyImplyLeading: false,
             title: Text(
-                "Signed in as ${_userModel != null ? _userModel.name : ""}"),
+                "Signed in as ${model.userModel != null ? model.userModel.name : ""}"),
             actions: [
               GestureDetector(
                 onTap: () {
@@ -115,8 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         isLoading: model.isLoading,
                         labelText: "SHARE",
                         onPressed: () {
-                          var result =
-                              model.shareSecret(token: _userModel.token);
+                          var result = model.shareSecret();
                           result.then((value) {
                             if (value != null) {
                               _key.currentState.showSnackBar(SnackBar(

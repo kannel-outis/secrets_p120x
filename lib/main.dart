@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app/locator/locator.dart';
-import 'app/route/routes.gr.dart';
+import 'app/route/routes.gr.dart' as routes;
 import 'services/navigation/navigation_service.dart';
 import 'ui/const/theme.dart';
 import 'ui/screens/authentication/login/login_screen.dart';
@@ -18,8 +18,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: themeData,
       navigatorKey: locator<NavigationService>().navigatorKey,
-      initialRoute: Routes.loginScreen,
-      onGenerateRoute: Router().onGenerateRoute,
+      initialRoute: routes.Routes.loginScreen,
+      onGenerateRoute: routes.Router().onGenerateRoute,
       home: LoginScreen(),
     );
   }

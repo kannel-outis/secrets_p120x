@@ -7,11 +7,12 @@ import '../../../services/service_handlers/secret_services/secrets_services.dart
 import '../../../models/user_model.dart';
 import 'package:stacked/stacked.dart';
 
-class HomeScreenViewModel extends BaseViewModel {
+class HomeScreenViewModel extends FutureViewModel<UserModel> {
   String _secret;
   var _localPrefs = locator<LocalPrefs>();
   var _navigatorService = locator<NavigationService>();
   bool _isLoading = false;
+  UserModel _userModel;
   Exceptions _exceptions;
 
   set setSecret(String value) {
@@ -24,7 +25,9 @@ class HomeScreenViewModel extends BaseViewModel {
     notifyListeners();
 
     try {
-      await SecretService().shareSecret(_secret, token).then((value) {
+      await SecretService()
+          .shareSecret(_secret, token ?? _userModel.token)
+          .then((value) {
         _isLoading = false;
         notifyListeners();
         return null;
@@ -54,10 +57,19 @@ class HomeScreenViewModel extends BaseViewModel {
   //get user data from local pref
   Future<UserModel> getUserData() async {
     print("Start");
-    return await _localPrefs.getUserData();
+    var model = await _localPrefs.getUserData();
+    if (model != null) {
+      _userModel = model;
+      return _userModel;
+    }
+    return null;
   }
 
+  UserModel get userModel => _userModel;
   String get secret => _secret;
   bool get isLoading => _isLoading;
   Exceptions get exceptions => _exceptions;
+
+  @override
+  Future<UserModel> futureToRun() => getUserData();
 }
